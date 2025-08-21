@@ -1,0 +1,46 @@
+-- Create database
+CREATE DATABASE IF NOT EXISTS billing CHARACTER SET utf8mb4;
+USE billing;
+
+-- Users/Admins (existing tables assumed)
+CREATE TABLE IF NOT EXISTS users (
+  userid INT AUTO_INCREMENT PRIMARY KEY,
+  user_name VARCHAR(100) NOT NULL UNIQUE,
+  password VARCHAR(255) NOT NULL,
+  role VARCHAR(20) NOT NULL DEFAULT 'USER',
+  login_time TIMESTAMP NULL DEFAULT NULL
+);
+
+CREATE TABLE IF NOT EXISTS admins (
+  adminid INT AUTO_INCREMENT PRIMARY KEY,
+  admin_name VARCHAR(100) NOT NULL UNIQUE,
+  password VARCHAR(255) NOT NULL
+);
+
+-- Customers
+CREATE TABLE IF NOT EXISTS customers (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  account_number VARCHAR(50) NOT NULL UNIQUE,
+  name VARCHAR(120) NOT NULL,
+  address VARCHAR(255) NOT NULL,
+  telephone VARCHAR(30) NOT NULL,
+  units_consumed INT NOT NULL DEFAULT 0
+);
+
+-- Bills
+CREATE TABLE IF NOT EXISTS bills (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  account_number VARCHAR(50) NOT NULL,
+  units INT NOT NULL,
+  amount DECIMAL(10,2) NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (account_number) REFERENCES customers(account_number) ON DELETE CASCADE
+);
+
+-- Items (if used by your assignment)
+CREATE TABLE IF NOT EXISTS items (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(120) NOT NULL,
+  quantity INT NOT NULL DEFAULT 0,
+  price DECIMAL(10,2) NOT NULL DEFAULT 0
+);
